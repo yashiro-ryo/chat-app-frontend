@@ -43,6 +43,11 @@ function addressList(props: any) {
     webSocket.getUserInfos(1);
   };
 
+  const deleteUser = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const deleteUserId = Number(e.currentTarget.getAttribute("data-user-id"));
+    webSocket.deleteUser(deleteUserId);
+  };
+
   return (
     <>
       <Box borderRadius="5px" border="1px" marginTop="30px" padding="10px">
@@ -87,6 +92,8 @@ function addressList(props: any) {
                       display="inline-block"
                       marginTop="5px"
                       marginRight="10px"
+                      data-user-id={address.userId}
+                      onClick={deleteUser}
                     >
                       削除
                     </Button>

@@ -117,6 +117,23 @@ function getTalk(talkroomId: number) {
   Log.v("successed send get message request");
 }
 
+function deleteUser(deleteUserId: number){
+  if (con === null) {
+    return;
+  }
+
+  const content = {
+    token: "yashirotoken-desu",
+    request: "delete-user",
+    data: {
+      UserId: 1,
+      DeleteUserId: deleteUserId,
+    },
+  };
+  con.send(JSON.stringify(content));
+  Log.v("successed send get message request");
+}
+
 function connectionClose() {
   if (con === null) {
     return;
@@ -156,6 +173,7 @@ export default {
   setupEventHandler,
   sendMessage,
   getTalkrooms,
+  deleteUser,
   connectionClose,
   searchUser,
   getTalk,
