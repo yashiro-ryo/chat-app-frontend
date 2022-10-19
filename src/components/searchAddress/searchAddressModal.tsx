@@ -74,7 +74,9 @@ function searchAddressModal(props: any) {
   };
 
   const addUser = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("add user :" + e.currentTarget.getAttribute("data-user-id"));
+    const addUserId = Number(e.currentTarget.getAttribute("data-user-id"));
+    webSocket.addUser(addUserId);
+    props.onClose();
   };
   return (
     <>

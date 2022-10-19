@@ -117,7 +117,7 @@ function getTalk(talkroomId: number) {
   Log.v("successed send get message request");
 }
 
-function deleteUser(deleteUserId: number){
+function deleteUser(deleteUserId: number) {
   if (con === null) {
     return;
   }
@@ -132,6 +132,23 @@ function deleteUser(deleteUserId: number){
   };
   con.send(JSON.stringify(content));
   Log.v("successed send get message request");
+}
+
+function addUser(addUserId: number) {
+  if (con === null) {
+    return;
+  }
+
+  const content = {
+    token: "yashirotoken-desu",
+    request: "add-user",
+    data: {
+      UserId: 1,
+      AddUserId: addUserId,
+    },
+  };
+  con.send(JSON.stringify(content));
+  Log.v("successed send add user request");
 }
 
 function connectionClose() {
@@ -174,6 +191,7 @@ export default {
   sendMessage,
   getTalkrooms,
   deleteUser,
+  addUser,
   connectionClose,
   searchUser,
   getTalk,
