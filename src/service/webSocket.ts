@@ -3,7 +3,7 @@ import { emitter } from "./eventEmitter";
 let con: WebSocket | null = null;
 
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYyMzk3NjEsInRva2VuLXR5cGUiOiJ0b2tlbiIsInVzZXJfaWQiOjEyMzQ1Njc4fQ.wjd0G8H_S5A8pZJHd8-lWmj9mIVHYFyMSbA-CSCe7Yc";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYyNDMwNTQsInRva2VuLXR5cGUiOiJ0b2tlbiIsInVzZXJfaWQiOjF9.C8ugH9ec5Kwg3v5mjc-1zKtOaEyiqf_skZJGk9yRmnE";
 
 function setupEventHandler() {
   if (con !== null) {
