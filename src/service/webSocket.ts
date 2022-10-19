@@ -13,7 +13,7 @@ function setupEventHandler() {
 
   // test 用のcookieを挿入する
   document.cookie = "token=" + token;
-  console.log(document.cookie)
+  console.log(document.cookie);
 
   // TODO https にかえる -> wss
   con = new WebSocket("ws://localhost:8080/ws");
