@@ -70,6 +70,22 @@ function searchUser(email: string) {
   Log.v("successed send search query email");
 }
 
+function getUserInfos(userId: number) {
+  if (con === null) {
+    return;
+  }
+
+  const content = {
+    token: "yashirotoken-desu",
+    request: "get-user",
+    data: {
+      userId: userId,
+    },
+  };
+  con.send(JSON.stringify(content));
+  Log.v("successed send get users request");
+}
+
 function getTalkrooms(userId: number) {
   if (con === null) {
     return;
@@ -129,6 +145,10 @@ function handleWebsocketResponse(data: any) {
       emitter.emit("update-talk", data);
       console.log(data);
       break;
+    case "get-users-result":
+      Log.v("response get users");
+      emitter.emit("update-users", data);
+      break;
   }
 }
 
@@ -139,4 +159,5 @@ export default {
   connectionClose,
   searchUser,
   getTalk,
+  getUserInfos,
 } as const;
