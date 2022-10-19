@@ -2,11 +2,19 @@ import Log from "../tools/log";
 import { emitter } from "./eventEmitter";
 let con: WebSocket | null = null;
 
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYyMzk3NjEsInRva2VuLXR5cGUiOiJ0b2tlbiIsInVzZXJfaWQiOjEyMzQ1Njc4fQ.wjd0G8H_S5A8pZJHd8-lWmj9mIVHYFyMSbA-CSCe7Yc";
+
 function setupEventHandler() {
   if (con !== null) {
     return;
   }
   Log.v("setup websocket event handler");
+
+  // test 用のcookieを挿入する
+  document.cookie = "token=" + token;
+  console.log(document.cookie)
+
   // TODO https にかえる -> wss
   con = new WebSocket("ws://localhost:8080/ws");
   con.onopen = () => {
