@@ -14,7 +14,12 @@ function talkPageBodyTimeLine() {
   const [messageInfos, setMessageInfo] = useState<Array<any>>([]);
   useEffect(() => {
     emitter.on("update-talk", (talk) => {
+      if (talk.body.message == null) {
+        setMessageInfo([]);
+        return;
+      }
       if (talk == undefined || talk.length == 0) {
+        console.log("トークを表示できないよ!");
         return;
       }
       console.log(talk.body.message);
@@ -34,7 +39,7 @@ function talkPageBodyTimeLine() {
         className="h-[calc(100vh_-_60px_-_50px_-_175px)]"
         display="block"
       >
-        {messageInfos.length === 0 ? (
+        {messageInfos.length === 0 || messageInfos == null ? (
           <Text>メッセージがありません</Text>
         ) : (
           <Box>

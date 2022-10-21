@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Textarea, Button } from "@chakra-ui/react";
 import webSocket from "../../service/webSocket";
 import Log from "../../tools/log";
+import talkroomDataStore from "../../datastore/talkroomStore";
 
 function talkPageBodyFooter() {
   const sendMessage = () => {
@@ -11,7 +12,11 @@ function talkPageBodyFooter() {
       return;
     }
     // TODO datastore から取るようにする
-    const talkroomId = 2;
+    const talkroomId = talkroomDataStore.getNowSelectedTalkroomId();
+    if (talkroomId == 0) {
+      console.log("invalid talkroom Id");
+      return;
+    }
     webSocket.sendMessage("text", value, talkroomId);
   };
 

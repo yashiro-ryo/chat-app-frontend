@@ -1,9 +1,7 @@
 import Log from "../tools/log";
 import { emitter } from "./eventEmitter";
+import friendStore from "../datastore/friendUserStore";
 let con: WebSocket | null = null;
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYzMzg1NzUsInRva2VuLXR5cGUiOiJ0b2tlbiIsInVzZXJfaWQiOjF9.RPLIJLjUVWEMFjHia45rjMW4iOLSS3GK7IgzXB9F_GQ";
 
 function setupEventHandler() {
   if (con !== null) {
@@ -12,7 +10,6 @@ function setupEventHandler() {
   Log.v("setup websocket event handler");
 
   // test 用のcookieを挿入する
-  document.cookie = "token=" + token;
   console.log(document.cookie);
 
   // TODO https にかえる -> wss
@@ -151,6 +148,25 @@ function addUser(addUserId: number) {
   Log.v("successed send add user request");
 }
 
+function createTalkroom(users: Array<number>, talkroomName: string) {
+  if (con === null) {
+    return;
+  }
+
+  const content = {
+    token: "yashirotoken-desu",
+    request: "create-talkroom",
+    data: {
+      UserId: 1,
+      TalkroomName: talkroomName,
+      UserIds: users,
+    },
+  };
+  con.send(JSON.stringify(content));
+  Log.v("successed send create talkroom request");
+  return;
+}
+
 function connectionClose() {
   if (con === null) {
     return;
@@ -181,6 +197,7 @@ function handleWebsocketResponse(data: any) {
       break;
     case "get-users-result":
       Log.v("response get users");
+      friendStore.setFriend(data.body.UserInfos);
       emitter.emit("update-users", data);
       break;
   }
@@ -196,4 +213,5 @@ export default {
   searchUser,
   getTalk,
   getUserInfos,
+  createTalkroom,
 } as const;

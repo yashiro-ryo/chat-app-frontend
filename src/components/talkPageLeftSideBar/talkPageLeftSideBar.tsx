@@ -10,6 +10,7 @@ import {
 import CreateTalkroomModal from "./createTalkroomModal";
 import { emitter } from "../../service/eventEmitter";
 import websocket from "../../service/webSocket";
+import talkroomDataStore from '../../datastore/talkroomStore'
 
 function talkPageLeftSideBar() {
   const [talkrooms, setTalkrooms] = useState([]);
@@ -36,6 +37,7 @@ function talkPageLeftSideBar() {
     const talkroomId = Number(e.currentTarget.getAttribute("data-talkroom-id"));
     console.log("talkroom id :" + talkroomId);
     websocket.getTalk(talkroomId);
+    talkroomDataStore.setNowSelectedTalkroomId(talkroomId)
   };
 
   return (
