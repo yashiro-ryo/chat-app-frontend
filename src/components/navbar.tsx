@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Menu,
@@ -7,9 +7,26 @@ import {
   MenuItem,
   Flex,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { emitter } from "../service/eventEmitter";
+import myInfoStore from "../datastore/myinfoStore";
 function navbar() {
+  const [user, setUser] = useState<{ userId: number; userName: string }>({
+    userId: 0,
+    userName: "dummy user",
+  });
+  useEffect(() => {
+    emitter.on("websocket-connected", () => {
+      setUser(myInfoStore.getMyInfo());
+    });
+    return () => {
+      emitter.off("websocket-connected", () => {
+        console.log("off");
+      });
+    };
+  }, []);
   return (
     <>
       {/* TODO レスポンシブル対応 */}
@@ -21,7 +38,7 @@ function navbar() {
           <Spacer />
           <Box lineHeight="35px" marginRight="10px">
             <Menu isLazy>
-              <MenuButton>dummy user さん</MenuButton>
+              <MenuButton>{user.userName} さん</MenuButton>
               <MenuList>
                 {/* MenuItems are not rendered unless Menu is open */}
                 <Link to="/talkpage">

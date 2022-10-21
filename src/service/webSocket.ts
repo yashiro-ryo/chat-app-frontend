@@ -1,6 +1,7 @@
 import Log from "../tools/log";
 import { emitter } from "./eventEmitter";
 import friendStore from "../datastore/friendUserStore";
+import myInfoStore from "../datastore/myinfoStore";
 let con: WebSocket | null = null;
 
 function setupEventHandler() {
@@ -17,7 +18,8 @@ function setupEventHandler() {
   con.onopen = () => {
     Log.v("websocket connected");
     // TODO エラーダイアログ非表示する
-    emitter.emit("websocket-connected");
+    // 情報を取得する
+    getMyInfo();
   };
 
   // any は滅ぼす
@@ -34,6 +36,20 @@ function setupEventHandler() {
   };
 }
 
+// cookieから自分の情報を取得する
+function getMyInfo() {
+  if (con === null) {
+    return;
+  }
+  const content = {
+    token: "yashirotoken-desu",
+    request: "get-myinfo",
+    data: {},
+  };
+  con.send(JSON.stringify(content));
+  Log.v("successed send get myinfo request");
+}
+
 function sendMessage(contentType: string, text: string, talkroomId: number) {
   if (con === null) {
     return;
@@ -42,7 +58,7 @@ function sendMessage(contentType: string, text: string, talkroomId: number) {
     token: "yashirotoken-desu",
     request: "add-message",
     data: {
-      userId: 1,
+      userId: myInfoStore.getMyInfo().userId,
       contentType: contentType,
       content: text,
       talkroomId: talkroomId,
@@ -76,7 +92,7 @@ function getUserInfos(userId: number) {
     token: "yashirotoken-desu",
     request: "get-user",
     data: {
-      userId: userId,
+      userId: myInfoStore.getMyInfo().userId,
     },
   };
   con.send(JSON.stringify(content));
@@ -91,7 +107,7 @@ function getTalkrooms(userId: number) {
     token: "yashirotoken-desu",
     request: "get-talkrooms",
     data: {
-      userId: userId,
+      userId: myInfoStore.getMyInfo().userId,
     },
   };
   con.send(JSON.stringify(content));
@@ -157,7 +173,7 @@ function createTalkroom(users: Array<number>, talkroomName: string) {
     token: "yashirotoken-desu",
     request: "create-talkroom",
     data: {
-      UserId: 1,
+      UserId: myInfoStore.getMyInfo().userId,
       TalkroomName: talkroomName,
       UserIds: users,
     },
@@ -177,6 +193,11 @@ function connectionClose() {
 
 function handleWebsocketResponse(data: any) {
   switch (data.response) {
+    case "get-myinfo-result":
+      Log.v("response get myinfo");
+      myInfoStore.setMyInfo(data.body.userId, data.body.userName);
+      emitter.emit("websocket-connected");
+      break;
     case "search-user-result":
       Log.v("response search user");
       // ステータスコードチェック
